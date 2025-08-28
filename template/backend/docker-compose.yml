@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   ambev.developerevaluation.webapi:
     container_name: ambev_developer_evaluation_webapi
@@ -15,8 +13,14 @@ services:
       - "8080"
       - "8081"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      # - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      # - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      # - Fixed volumes for macOS
+      - ~/.microsoft/usersecrets:/home/app/.microsoft/usersecrets:ro
+      - ~/.aspnet/https:/home/app/.aspnet/https:ro
+    depends_on:
+      - ambev.developerevaluation.database
+      - ambev.developerevaluation.cache
 
   ambev.developerevaluation.database:
     container_name: ambev_developer_evaluation_database
