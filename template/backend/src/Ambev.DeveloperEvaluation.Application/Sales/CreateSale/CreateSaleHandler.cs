@@ -42,6 +42,7 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
         var sale = _mapper.Map<Sale>(request);
         
         // Apply discount rules and calculate totals
+        sale.ApplyDiscountRules();
         sale.CalculateTotalAmount();
 
         var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
