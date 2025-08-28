@@ -54,6 +54,29 @@ public class SaleItem : BaseEntity
     public virtual Sale Sale { get; set; } = null!;
 
     /// <summary>
+    /// Applies business rules for discounts based on quantity
+    /// </summary>
+    public void ApplyDiscountRules(decimal discountPercentage)
+    {
+        // Validate if the discount percentage matches quantity rules
+        if (Quantity > 20)
+        {
+            throw new InvalidOperationException("Cannot sell more than 20 identical items");
+        }
+
+        if ((Quantity < 4 && discountPercentage > 0) ||
+            (Quantity >= 4 && Quantity < 10 && discountPercentage != 10) ||
+            (Quantity >= 10 && Quantity <= 20 && discountPercentage != 20))
+        {
+            throw new InvalidOperationException("Invalid discount percentage for the given quantity");
+        }
+
+        // Apply the provided discount percentage instead of fixed values
+        DiscountPercentage = discountPercentage;
+        CalculateTotalAmount();
+    }
+
+    /// <summary>
     /// Calculates the total amount for this item
     /// </summary>
     public void CalculateTotalAmount()

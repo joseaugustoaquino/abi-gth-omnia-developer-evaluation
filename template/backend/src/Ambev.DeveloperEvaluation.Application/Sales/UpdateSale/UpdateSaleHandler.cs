@@ -72,6 +72,7 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
         }
 
         // Apply discount rules and recalculate totals
+        existingSale.ApplyDiscountRules();
         existingSale.CalculateTotalAmount();
 
         var updatedSale = await _saleRepository.UpdateAsync(existingSale, cancellationToken);

@@ -75,6 +75,44 @@ public class Sale : BaseEntity
     }
 
     /// <summary>
+    /// Applies business rules for discounts based on quantity
+    /// </summary>
+    public void ApplyDiscountRules()
+    {
+        // Business rules from README:
+        // - 4+ items: 10% discount
+        // - 10-20 items: 20% discount
+        // - Cannot sell more than 20 items
+        // - Less than 4 items: no discount
+
+        if (Items == null || !Items.Any())
+        {
+            return;
+        }
+
+        var totalItems = Items.Sum(x => x.Quantity);
+
+        // Apply discount rules based on total quantity
+        var discountPercentage = 0m;
+        if (totalItems >= 10 && totalItems <= 20)
+        {
+            discountPercentage = 0.20m;
+        }
+        else if (totalItems >= 4)
+        {
+            discountPercentage = 0.10m;
+        }
+            
+        // Apply discount to each item
+        foreach (var item in Items)
+        {
+            item.ApplyDiscountRules(discountPercentage);
+        }
+
+        CalculateTotalAmount();
+    }
+
+    /// <summary>
     /// Calculates the total amount based on sale items
     /// </summary>
     public void CalculateTotalAmount()
